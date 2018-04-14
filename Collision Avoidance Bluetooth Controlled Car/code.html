@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Code </h1>
+<p>
+***************************ECE 4760: FINAL PROJECT*************************<br/>
+*  Title: Bluetooth Collision Avoidance Car<br/>
+*  Authors: Dev Sanghvi (dys27), Abhimanyu Khandelwal (ak2455) & Anwitha Paruchuri (ap2286)<br/>
+* Target PIC:  PIC32MX250F128B<br/>
+ * Not to be distributed!<br/>
+ */
+///////////////////////////////////////////////////////////////////<br/>
+// Clocks and Protothreads Configure!<br/>
+#include "config_1_2_2.h"<br/>
+// threading library<br/>
+#include "pt_cornell_1_2_2.h"<br/>
+
+//PORT A Internal Pull ups/Pull downs<br/>
+#define EnablePullDownA(bits) CNPUACLR=bits; CNPDASET=bits;<br/>
+#define DisablePullDownA(bits) CNPDACLR=bits;<br/>
+#define EnablePullUpA(bits) CNPDACLR=bits; CNPUASET=bits;<br/>
+#define DisablePullUpA(bits) CNPUACLR=bits;<br/>
+
+char buffer[60];  // string buffer<br/>
+// === thread structures ============================================<br/>
+// thread control structs<br/>
+// note that UART input and output are threads<br/>
+static struct pt pt_serial;<br/>
+// The following threads are necessary for UART control<br/>
+
+//SPI DAC SETUP<br/>
+volatile SpiChannel spiChn = SPI_CHANNEL2;<br/>
+volatile int spiClkDiv = 2; // 20 MHz DAC clock<br/>
+
+// Variables<br/>
+static char character;<br/>
+static int duty_cycle = 4200; //Initial value for the servo motor in forward direction<br/>
+static int time1 = 0, time2 = 0, time3=0, time4=0; //To store timer counts<br/>
+static int flag1 = 0, flag2=0, flag3=0, flag4=0; //Keep track of execution loops<br/>
+
+volatile int south = 0, west = 0, north = 0, east = 0; //To capture Infrared sensor values<br/>
+
+/****** Input Capture Event Interrupt *******/<br/>
+void __ISR(_INPUT_CAPTURE_1_VECTOR, ipl2) IC1Handler(void)<br/>
+{
+    south = mIC1ReadCapture(); //Read Capture event for Back Sensor<br/>
+    if((south < 200) && (mPORTAReadBits(BIT_0)==1)) <br/>
+            {<br/>
+                mPORTASetBits(BIT_0);<br/>
+                mPORTASetBits(BIT_3);<br/>
+                duty_cycle = 4200;<br/>
+            }<br/>
+    mIC1ClearIntFlag(); //clear Interrupt Flag<br/>
+}<br/>
+void __ISR(_INPUT_CAPTURE_4_VECTOR, ipl2) IC4Handler(void)<br/>
+{<br/>
+    west = mIC4ReadCapture(); //Read Capture event for left sensor<br/>
+    if (west <200 && (mPORTAReadBits(BIT_0)==0) && duty_cycle == 3000) //Obstacle Detection for front left<br/>
+    {<br/>
+        mPORTASetBits(BIT_0);<br/>
+        mPORTASetBits(BIT_3);<br/>
+        duty_cycle = 4200;<br/>
+    }<br/>
+    if (west <200 && (mPORTAReadBits(BIT_0)==1) && duty_cycle == 5500) //Obstacle detection for back right<br/>
+    {<br/>
+        mPORTASetBits(BIT_0);<br/>
+        mPORTASetBits(BIT_3);<br/>
+        duty_cycle = 4200;<br/>
+    }<br/>
+    mIC4ClearIntFlag(); //clear Interrupt flag<br/>
+}<br/>
+void __ISR(_INPUT_CAPTURE_5_VECTOR, ipl2) IC5Handler(void)<br/>
+{<br/>
+    north = mIC5ReadCapture(); //Read Capture event for front sensor<br/>
+    if (north <200 && (mPORTAReadBits(BIT_0)==0))<br/>
+    {<br/>
+        mPORTAClearBits(BIT_0);<br/>
+        mPORTAClearBits(BIT_3);<br/>
+        duty_cycle = 4200;<br/>
+    }<br/>
+    mIC5ClearIntFlag(); //clear Interrupt flag<br/>
+}<br/>
+
+void __ISR(_INPUT_CAPTURE_3_VECTOR, ipl2) IC3Handler(void)<br/>
+{<br/>
+    east = mIC3ReadCapture(); //Read Capture event for right sensor<br/>
+    if (east <200 && (mPORTAReadBits(BIT_0)==0) && duty_cycle == 5500) //Obstacle detection for front right<br/>
+    {<br/>
+        
+        mPORTASetBits(BIT_0);<br/>
+        mPORTASetBits(BIT_3);<br/>
+        duty_cycle = 4200;<br/>
+    }<br/>
+       if (east <200 && (mPORTAReadBits(BIT_0)==1)&& duty_cycle == 3000) //Obstacle detection for back left<br/>
+    {<br/>
+        mPORTASetBits(BIT_0);<br/>
+        mPORTASetBits(BIT_3);<br/>
+        duty_cycle = 4200;<br/>
+    }<br/>
+    mIC3ClearIntFlag(); //Clear Interrupt flag<br/>
+}<br/>
+<br/>
+//=== Serial terminal thread =========================================<br/>
+//Thread for interfacing with the Bluetooth to take user input<br/>
+static PT_THREAD (protothread_serial(struct pt *pt))<br/>
+{<br/>
+    PT_BEGIN(pt);<br/>
+      mPORTASetPinsDigitalOut(BIT_0 | BIT_3); //Set port as output<br/>
+      mPORTAClearBits(BIT_0 | BIT_3);<br/>
+      while(1) {<br/>
+          PT_YIELD_TIME_msec(100);<br/>
+        character = UARTGetDataByte(UART2); //Store Bluetooth command in a variable<br/>
+        UARTSendDataByte(UART2, character); //Echo back the same command to serial terminal<br/>
+<br/>
+        if(character == 'b') //Backward direction<br/>
+        {<br/>
+            mPORTASetBits(BIT_0);<br/>
+            mPORTAClearBits(BIT_3);<br/>
+            duty_cycle = 4000;<br/>
+        }<br/>
+        if(character == 'f') //Forward direction<br/>
+        {<br/><br/>
+            mPORTASetBits(BIT_3);<br/>
+            mPORTAClearBits(BIT_0);<br/>
+            duty_cycle = 4200;<br/>
+        }<br/>
+        if(character == 's') //Stop<br/>
+        {<br/>
+            mPORTASetBits(BIT_0);<br/>
+            mPORTASetBits(BIT_3);<br/>
+            duty_cycle = 4200;<br/>
+        }<br/>
+        if(character == 'i') //Turn left and Forward<br/>
+        {<br/>
+            flag1=0;<br/>
+            time1 = PT_GET_TIME();<br/>
+            duty_cycle = 3000;<br/>
+            mPORTAClearBits(BIT_0);<br/>
+            mPORTASetBits(BIT_3);<br/>
+        }<br/>
+        if((PT_GET_TIME()-time1)>1500 && flag1==0)<br/>
+            {<br/>
+                UARTSendDataByte(UART2, character);<br/>
+                duty_cycle=4200;  <br/>
+                flag1=1;<br/>
+            }<br/>
+        if(character == 'o') //Turn right and forward<br/>
+        {<br/>
+            time2 = PT_GET_TIME();<br/>
+            flag2=0;<br/>
+            mPORTAClearBits(BIT_0);<br/>
+            mPORTASetBits(BIT_3);<br/>
+            duty_cycle = 5500;<br/>
+        }<br/>
+            if(PT_GET_TIME()-time2>=1500 && flag2==0)<br/>
+            {<br/>
+                duty_cycle=4200;<br/>
+                flag2=1;<br/>
+            }<br/>
+        if(character == 'k') //Turn left and backward<br/>
+        { <br/>
+            time3 = PT_GET_TIME();<br/>
+            flag3=0;<br/>
+            mPORTASetBits(BIT_0);<br/>
+            mPORTAClearBits(BIT_3);<br/>
+            duty_cycle = 3000;<br/>
+            <br/>
+        }<br/>
+        if(PT_GET_TIME()-time3>=1500 && flag3==0)<br/>
+            {<br/>
+                duty_cycle=4200;<br/>
+                flag3=1;<br/>
+            }      <br/>
+        if(character == 'l') //Turn right and backward<br/>
+        { <br/>
+            time4 = PT_GET_TIME();<br/>
+            flag4=0;<br/><br/>
+            mPORTASetBits(BIT_0);<br/>
+            mPORTAClearBits(BIT_3);<br/>
+            duty_cycle = 5500;<br/>
+        }<br/>
+            if(PT_GET_TIME()-time4>=1500 && flag4==0)<br/><br/>
+            {<br/>
+                duty_cycle=4200;<br/><br/>
+                flag4=1;<br/>
+            }<br/>
+        if(character == 'q') // circular left<br/>
+        {<br/>
+           mPORTAClearBits(BIT_0);<br/>
+            mPORTASetBits(BIT_3);<br/>
+            duty_cycle = 3000; <br/>
+        }        <br/>
+        if(character == 'w') // circular right<br/>
+        {<br/>
+           mPORTAClearBits(BIT_0);<br/>
+            mPORTASetBits(BIT_3);<br/>
+            duty_cycle = 5500; <br/>
+        }<br/>
+        SetDCOC3PWM(duty_cycle);<br/>
+      } // End While(1)<br/>
+  PT_END(pt); // End Thread<br/>
+}<br/>
+
+// === Main  ======================================================<br/>
+
+void main(void) {<br/>
+      // === config threads ==========  <br/>
+     ANSELA = 0; ANSELB = 0; <br/>
+    <br/>
+     PT_setup();<br/>
+  
+     //=== Timer Setups =========================================<br/>
+     // Set up Timer 2 to control  Servo Motor Direction <br/>
+     OpenTimer2(T2_ON | T2_SOURCE_INT | T2_PS_1_16, 50000); // 40000000/(50000*16)=50Hz Frequency<br/>
+
+     // set up timer 3 for echo captures of all sensors through IC1,IC3,IC4,IC5<br/>
+    OpenTimer3(T3_ON | T3_SOURCE_INT | T3_PS_1_256, 20000); //Controls PWM Signals<br/>
+ <br/>
+     // back sensor Echo capture<br/>
+    OpenCapture1(IC_EVERY_FALL_EDGE | IC_INT_1CAPTURE |IC_TIMER3_SRC | IC_ON );<br/>
+    // turn on the interrupt so that every capture can be recorded<br/>
+    ConfigIntCapture1(IC_INT_ON | IC_INT_PRIOR_2 | IC_INT_SUB_PRIOR_3);<br/>
+    INTClearFlag(INT_IC1);<br/>
+    // connect RPB13 to IC1 capture unit<br/>
+    PPSInput(3, IC1, RPB13);<br/><br/>
+    mPORTBSetPinsDigitalIn(BIT_13); // Set port as input (BIT_13)<br/>
+    <br/>
+  // set up compare1 for back sensor<br/>
+    OpenOC1(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE, 10, 10); //<br/>
+    // OC1 is PPS group 1, map to RPB3 <br/>
+    PPSOutput(1, RPB3, OC1);<br/>
+    
+    // west sensor Echo capture<br/>
+    OpenCapture4(IC_EVERY_FALL_EDGE | IC_INT_1CAPTURE |IC_TIMER3_SRC | IC_ON );<br/>
+    // turn on the interrupt so that every capture can be recorded<br/>
+    ConfigIntCapture4(IC_INT_ON | IC_INT_PRIOR_2 | IC_INT_SUB_PRIOR_2);<br/>
+    INTClearFlag(INT_IC4);<br/>
+    // connect RPB7 to IC4 capture unit<br/>
+    PPSInput(1, IC4, RPB7);<br/>
+    mPORTBSetPinsDigitalIn(BIT_7); // Set port as input (BIT_7)<br/>
+<br/>
+    // set up compare2 for west sensor<br/>
+    OpenOC2(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE, 10, 10); //<br/>
+    //OC2 is PPS group 2, map to RPB8<br/>
+    PPSOutput(2, RPB8, OC2);<br/>
+    <br/>
+    // front sensor Echo capture<br/>
+    OpenCapture5(IC_EVERY_FALL_EDGE | IC_INT_1CAPTURE |IC_TIMER3_SRC | IC_ON );<br/>
+    // turn on the interrupt so that every capture can be recorded<br/>
+    ConfigIntCapture5(IC_INT_ON | IC_INT_PRIOR_2 | IC_INT_SUB_PRIOR_1);<br/>
+    INTClearFlag(INT_IC5);<br/>
+    // connect RPB2 to IC5 capture unit<br/>
+    PPSInput(3, IC5, RPB2);<br/>
+    mPORTBSetPinsDigitalIn(BIT_2); // Set port as input (BIT_2)<br/>
+    <br/>
+    // set up compare4 for front sensor<br/>
+    OpenOC4(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE, 10, 10); //<br/>
+    //OC4 is PPS group 3, map to RPBA2<br/>
+    PPSOutput(3, RPA2, OC4);<br/>
+    <br/>
+    // east sensor Echo capture<br/>
+    OpenCapture3(IC_EVERY_FALL_EDGE | IC_INT_1CAPTURE |IC_TIMER3_SRC | IC_ON );<br/>
+    // turn on the interrupt so that every capture can be recorded<br/>
+    ConfigIntCapture3(IC_INT_ON | IC_INT_PRIOR_2 | IC_INT_SUB_PRIOR_3);<br/>
+    INTClearFlag(INT_IC3);<br/>
+    // connect RPB11 to IC3 capture unit<br/>
+    PPSInput(2, IC3, RPB11);<br/>
+    mPORTBSetPinsDigitalIn(BIT_11); // Set port as input (BIT_11)<br/>
+<br/>
+    // set up compare5 for east sensor<br/>
+    OpenOC5(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE, 10, 10); //<br/>
+     //OC5 is PPS group 3, map to RPA4<br/>
+    PPSOutput(3, RPA4, OC5);<br/>
+
+    //=== Setup of servo motor =========================================<br/>
+  
+    // set up compare3 for PWM mode<br/>
+    OpenOC3(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, duty_cycle, duty_cycle); //<br/>
+    // OC3 is PPS group 4, map to RPB9<br/>
+    PPSOutput(4, RPB9, OC3);<br/>
+<br/>
+    //=== Setup of SPI =========================================<br/>
+    // SDO2 is in PPS output group 2 connected to RPB5<br/>
+    PPSOutput(2, RPB5, SDO2);<br/>
+    // control CS for DAC<br/>
+    mPORTBSetPinsDigitalOut(BIT_4);<br/>
+    mPORTBSetBits(BIT_4);<br/>
+    // divide Fpb by 2, configure the I/O ports.<br/>
+    // 16 bit transfer CKP=1 CKE=1<br/>
+    // Enable SPI at 20MHz clock<br/>
+    SpiChnOpen(spiChn, SPI_OPEN_ON | SPI_OPEN_MODE16 | SPI_OPEN_MSTEN |    <br/> 
+    SPI_OPEN_CKE_REV, spiClkDiv);<br/>
+
+  // === setup system wide interrupts  ========<br/>
+  INTEnableSystemMultiVectoredInt();<br/>
+  //INIT the threads<br/>
+ PT_INIT(&pt_serial);<br/>
+  // Schedule the threads using round-robin scheduling<br/>
+  while (1){<br/>
+      PT_SCHEDULE(protothread_serial(&pt_serial));<br/>
+      }<br/>
+  } // main<br/>
+<br/>
+// === end  ======================================================<br/>
+</p><br/>
+<br/>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

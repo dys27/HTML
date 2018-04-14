@@ -1,0 +1,692 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>ECE 4760: Bluetooth-Controlled Guitar Amp</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+	<body>
+
+		<!-- Header -->
+			<section id="header">
+				<header>
+					<span class="image avatar"><img src="image_icon.jpg" alt="" /></span>
+					<h1 id="logo">ROBOT CAR</h1>
+					
+				</header>
+				<nav id="nav">
+					<ul>
+						<li><a href="#two"><input type="submit" class="special" value="High-level Design"></a></li>
+                        <li><a href="#three"><input type="submit" class="special" value="Hardware"></a></li>
+<li><a href="#four"><input type="submit" class="special" value="Software"></a></li>
+<li><a href="#five"><input type="submit" class="special" value="Results & Conclusion"></a></li>
+<li><a href="#six"><input type="submit" class="special" value="Appendix"></a></li>
+
+
+
+					
+
+					</ul>
+				</nav>
+				<footer>
+					<!--ul class="icons">
+						<li><a href="https://github.com/JustinSelig/BluetoothGuitarAmp" class="icon fa-github"><span class="label">Github</span></a></li>
+						<li><a href="mailto:jss459@cornell.edu?Subject=ECE 4760%20Guitar%20Amp" class="icon fa-envelope"><span class="label">Email</span></a></li>
+					</ul-->
+				</footer>
+			</section>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						
+						<!-- One: Overview -->
+							<section id="one">
+								<div class="container">
+									<header class="major">
+
+<iframe width="700" height="480" src="https://www.youtube.com/embed/EjcAwhZzgA8" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+
+										<h2>Bluetooth Controlled- Obstacle Avoidance Robot Car</h2>
+
+										<p>Abhimanyu Khandelwal (ak2455) <br/>Dev Sanghvi (dys27) <br/> Anwitha Paruchuri (ap2286) <br/>
+										</p>
+									</header>
+									<p><b><i> "Robot-Car: Design Fused with Obstacle Avoidance Technology"</b></i></p>
+
+									<p>Recently, there is an intensive research undertaken in the field of intelligence robotics and autonomous mobile robot applications. Through the ECE-4760 project we wanted to explore this field by building a robot car that can potentially avoid the obstacles. This is a user controlled robot car that has been integrated with ultrasonic sensors to get the information from the surrounding area and thereby avoid any kind of obstacle collisions.This is a robot car that can be remotely controlled using a Bluetooth terminal mobile/PC application and has the capability to avoid the collision with the obstacles. Essentially when the user gives a command that can potentially lead to an obstacle collision the bot overrides his command and stops avoiding any major damage. The robot car in the project can be made to move in six directions (Forward, Backward, Front right, Front left, Back right and Back left). The system includes a PIC32 microcontroller that forms the heart of the system .The Dc motors, Bluetooth module are interfaced to the microcontroller and the data received by the Bluetooth terminal application by the user is processed by the microcontroller to perform the necessary operations.  
+
+
+</p>
+								</div>
+							</section>
+
+						<!-- Two: High Level Design -->
+							<section id="two">
+								<div class="container">
+									<h3>High-Level Design</h3>
+									<h5>Main Goals Of the Project:</h5>
+									<ul class="feature-icons">
+										<li class="fa-car">Basic movements (forward, backward, and steering mount) and speed control</li>
+										<li class="fa-car">The body should be easy to build </li>
+										<li class="fa-car">Make it as compact as possible</li>
+										<li class="fa-car">Wirelessly controlled</li>
+                                                                                <li class="fa-car">Proximity sensing for obstacle avoidance</li>
+										
+									</ul>
+                                                                        <h5>The robot car design structure primarily consists of PIC32MX250F128B microcontroller, one dc motor, one servomotor and four ultrasonic sensors, a dual motor driver and a Bluetooth module. The car is capable of moving in six directions (forward, Backward, forward right, forward left, backward right, backward left). Additionally the car also incorporates an obstacle avoidance feature using the proximity sensors (ultrasonic). The car is controlled wirelessly using the Bluetooth module which is mounted on the car. A mobile/Pc Bluetooth terminal application is used to send the control commands to the robot car. The hardware aspect of the car is explained in detail in the following sections.</h5>
+
+
+										<h5>                                                         <br />
+										<br />
+									    <br />
+								        </h5>
+
+								
+
+									<p><span class="image left"><img src="block_diagram.png" width=750px height=500px alt="" /><i>Figure 1: Block Diagram </i></span>
+								
+									
+
+
+
+								</div>
+						</section>
+									
+						<!-- Three: Detailed Design -->
+						<section id="three">
+							<div class="container">
+									<h3>Hardware</h3> 
+									<p>The primary hardware components used in this project have been listed below: <br />
+1.	Pic32mx250f128b Microcontroller<br />
+2.	Hc-05 Bluetooth Module <br />
+3.	Dc Motor <br />
+4.	SG-90 Micro-Servo Motor <br />
+5.	HC Sr-04 Ultrasonic Sensors <br />
+6.	Motor Driver- L293dne <br />
+7.	4n35 Optoisolator <br />
+8.	Resistors (300 O To 1k?) <br />
+9.	Robot Car Chassis <br />
+10.	Battery Pack (Mn604) (9v)</p> 
+									<div class="features">
+										<article>
+											<a  class="image"><img src="microcontroller_layout.png" alt="" ><i>Figure 2: PIC32 Layout</i> </a>
+                                                                                     
+											<div class="inner">
+												<h4>PIC32MX250F128B MICROCONTROLLER</h4>
+												<p> align="center"> The PIC32MX MCU series offers a rich peripheral set at a low cost for a wide range of embedded designs that require complex code and higher feature integration. The series delivers up to 50 MHz/83 DMIPS performance and provides up to 512/64 KB Flash/ RAM options. The family encompasses a wide variety of rich features including SPI/I2s, capacitive touch sensing, an enhanced Parallel Master Port (PMP), Controller Area Network (CAN), a 10-bit, 1 Msps, 48-channel Analog to-Digital Converter (ADC) and a full-speed USB 2.0 device/host/OTG module. Additionally it also consists of includes four general purpose Direct Memory Access (DMA) controllers and two dedicated DMA controllers on each CAN and USB module.
+The car uses a large board that encompasses the pic controller with a port expander, Digital to Analog Converter, TFT header socket, programming header plug and power supply that has been used for lab exercises as a part of this course. The project had a requisite for a large number of pins as it had to custom four ultrasonic sensors and for this reason the TFT display unit has been removed. The PIC32 microcontroller was powered by the 9V battery pack. The layout of the large board referenced from the ECE 4760 course website is shown below.
+</p>
+											</div>
+										</article>
+										<article>
+											<a href="https://wiki.eprolabs.com/index.php?title=File:HC-05.jpg" class="image"><img src="HC-05.jpg" alt="" /><i>Figure 3: HC-05 Bluetooth Module</i></a>
+											<div class="inner">
+
+
+
+                                                                                        <h4>HC-05 BLUETOOTH MODULE </h4>
+												<p>The Bluetooth module HC-05 is a MASTER/SLAVE module that is very easy to operate and can be used in a master or slave configuration making it a great solution for wireless communication. The Bluetooth module is interfaced to the microcontroller using serial communication (UART). The receive terminal of the Bluetooth module is connected to the transmit channel of the microcontroller and transmit channel of the microcontroller is connected to the receive end of the microcontroller. 
+The default factory setting is SLAVE that can be modified by the AT commands. When set in the master mode the module can initiate a connection with other devices and in this way when mounted on the car the module can pair with another client for instance a smartphone. Through the use of a Bluetooth terminal on the mobile phone or the computer the user can send the data over to the target system. For this project one character of data is transmitted through the Bluetooth connection for enabling the direction control of the robot car. The primary standards that we have followed is determined by the Bluetooth Special Interest Group (SIG). The standards for Bluetooth that we have followed is set by IEEE 802.15.1. This standard essentially sets the PC addresses available for our use as well as limits our applications to the 2.4-2.485 GHz ISM band.
+
+</p>
+											</div>
+										</article>
+										<article>
+											<a href="https://www.kitronik.co.uk/2547-right-angle-geared-hobby-motor.html" class="image"><img src="dc motor.jpg" alt="" /><i>Figure 4: Dc Motor</i></a>
+											<div class="inner">
+
+
+
+<h4>DC MOTOR</h4>
+												<p>The robot car constructed in this project utilizes a geared DC motor which essentially is an extension of DC motor that has a gear assembly attached to it. The DC motor works over a fair range of voltage (6V-12V) and as the input voltage increases the speed (RPM) of the motor also increases. 
+                                                One significant disadvantage of these class of motors is that they generate significant voltage spikes that can potentially damage the microcontroller. Two optoisolaters have been used in the circuit to provide an electrical isolation between the Dc motor and the PIC32 microcontroller. The main functionality of DC motor in this project is enable the bidirectional control of the robot car. 
+
+</p>
+											</div>
+										</article>
+										<article>
+											<a href="https://www.adafruit.com/product/807" class="image"><img src="motor_driver.jpg" alt="" /><i>Figure 5: Motor Driver</i></a>
+											<div class="inner">
+
+<h4>MOTOR DRIVER- L293DNE</h4>
+												<p>A motor driver is an integrated circuit chip that acts an interface between the microcontroller and the motors. They act as current amplifiers since they take a low-current control signal and provide a higher-current signal which is utilized to drive the motors. The most commonly used motor driver IC’s are from the L293 series such as the L293D. This IC with 16 pins consist of two H-bridges and are designed to control 2 DC motors simultaneously. 
+												The motor controller (H bridge) is typically used as a simple driver for the DC motor to turn ON and OFF in one direction and can also be used to drive the motor in both directions. Appropriate input high and input low voltage levels to enable each channel of the device. This project utilizes bidirectional control mechanism of the motor driver.
+
+
+</p>
+											</div>
+										</article>
+										<article>
+											<a href="http://people.ece.cornell.edu/land/courses/ece4760/labs/f2017/lab4_opto_package.jpg" class="image"><img src="optoisolater.jpg" alt="" /><i>Figure 6: 4N35 Optoisolater</i></a>
+											<div class="inner">
+
+
+<h4>4N35 OPTOISOLATOR </h4>
+												<p>The basic design of an optoisolater (4N35) consists of an LED that produces infra-red light and a semiconductor photo-sensitive device that is used to detect the emitted infra-red beam. They essentially aid in electrically isolating the microcontroller from the DC motor thereby protecting it from high voltage spikes. Basically when the input voltage of the LED is forward biased, the LED emits light and this transmitted light turns ON the photo diode which produces nearly the same voltage as the input. The two input terminals of the H-Bridge have been connected through two optoisolaters to the I/O ports of the PIC32 microcontroller.
+
+
+</p>
+											</div>
+										</article>
+										<article>
+											<a href="https://www.amazon.com/TowerPro-Helicopter-Airplane-Controls-IFANCY-TECH/dp/B01G95KPZ4/ref=sr_1_2_sspa?ie=UTF8&qid=1512279448&sr=8-2-spons&keywords=servo+motors&psc=1" class="image"><img src="servo_motor.jpg" alt="" /><i>Figure 7: Servo Motor </i></a>
+											<div class="inner">
+
+												<h4>SG-90 MICRO-SERVO MOTOR</h4>
+												<p>
+Fundamentally, servomotors are electrical devices that can rotate objects at specific angles with great precision. The main components of the servomotor consists of a motor, potentiometer and a controlling circuit. The motor runs on a closed loop feedback system where by the difference in the values given to the error amplifier (one from the potentiometer which is the measured angle and the other is the true value of the angle to be reached which is given by the microcontroller) is minimized.
+The control signal to the servomotor is given in the form of Pulse Width Modulation by the microcontroller. The servomotor can 90 degrees in either directions from the neutral positon. Pulses of 1.5msec and 2msec will turn the motor 90 degrees and 180 degrees respectively. These pulses are given with an interval of 20msec.
+
+
+
+</p>
+											</div>
+										</article>
+										<article>
+											<a href="https://www.amazon.com/SainSmart-HC-SR04-Ranging-Detector-Distance/dp/B004U8TOE6" class="image"><img src="ultrasonic_sensor.jpg" alt="" /><i>Figure 8: HC-SR04 Ultrasonic Sensor</i></a>
+											<div class="inner">
+
+
+											   <h4>HC SR-04 ULTRASONIC SENSORS</h4>
+												<p>
+This project utilizes four ultrasonic sensors and these are integrated into the system to enable obstacle avoidance feature in the car. Two sensors were placed on the either side of the car and one was placed on the front side and the other is placed on the backside of the car. The HC-SR04 ultrasonic module provides 2cm - 400cm non-contact measurement function with a ranging accuracy of about 3mm. The 
+Module includes ultrasonic transmitter, receiver and a control circuit. The sensor is activated by sending a 10 μs pulse from the microcontroller. The ultrasonic sensor gives back an echo response when it detects an obstacle within the specified distance by the user. 
+
+
+
+
+</p>
+											</div>
+										</article>
+
+<article>
+											<a  class="image"><img src="voltage_divider.png" alt="" /><i>Figure 9: Voltage Divider</i></a>
+											<div class="inner">
+
+
+											   <h4>Voltage Divider</h4>
+												<p>
+We have built four voltage divider circuits for the four ultrasonic sensors to reduce the 5 voltage echo pulses to 3.3V, as these echo pulses are captured by the MCU pins which are set as Input Captures (I/O pins set as Input Captures). We have designed the voltage divider with 330Ω and 1KΩ resistors as shown in the figure-9.  
+
+
+
+
+</p>
+											</div>
+										</article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+										<article>
+											<a  class="image"><img src="car_chassis.jpg" alt="" /><i>Figure 10: Car Chassis</i></a>
+											<div class="inner">
+
+
+
+
+
+												   <h4>ROBOT CAR CHASSIS</h4>
+												<p>
+A robot chassis kit has been purchased online which is linked in the Appendix section. The chassis has been modified according to our requirement to robustly house all the hardware components. The sensors have been hot glued to the sides of the car and the hardware circuitry were soldered on the protoboards and then were mounted on to the chassis using metal clamps and screws. The microcontroller which is mounted on a large board was drilled on to the base of the car chassis. The car is three wheeled with two in the back and one in the front that essentially controls the direction in which the car moves.
+
+
+
+
+</p>
+											</div>
+										</article>
+									
+												
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+											
+										
+									<section id="four">
+									<div class="container">
+									<h3>SOFTWARE DESIGN</h3>
+									<p>The software components of the project can be divided into the following categories:
+									    1. Bluetooth and Serial Communication Setup<br/>
+									    2. Ultrasonic Sensors Setup<br/>
+									    3. Sevomotor Setup<br/>
+									    4. Serial Peripheral Interface Setup<br/>
+									    5. Signaling Algorithm <br/>
+									
+
+
+
+									    </p>
+
+									    <h3>Signaling Algorithm</h3>
+									    <p> The major software component of the robot car is the signaling algorithm. It has been implemented using a protothread that was ran 100 times a second to obtain good control and stability over the vehicle. A detailed description of the algorithm is mentioned below.
+
+<img src="algo.png" width="750pix" Height="600pix" alt="" /><i>Figure 11 : Signaling Algorithm Functional Diagram</i> <br/> 
+<br/>
+
+
+
+Signaling Algorithm: <br/>
+
+1.	<b>STOP</b>:  This state is the default state of the car, that is all states go to the STOP state before entering some other state. The STOP state is in-charge of checking of all the ultrasonic readings and to stop the car when one of the defined criteria is met. Such criteria have been set through different ‘if’ conditions based on ultrasonic sensor readings depending on the position of the car and the obstacles. Range for the ultrasonic sensors has been set as less than 200 by experimenting with the sensors in presence of an obstacle to avoid collision. If the car is in STOP state and one of the criteria is still being met and user tries to give a command that would lead to collision with an obstacle, the car remains in the STOP state to avoid collision. <br/>
+<br/>
+
+2.	<b>FORWARD</b>:  This is the state that the car enters when user gives the command ‘f’ through the Bluetooth serial terminal. The car turns the wheels in the forward motion and the duty cycle of the servo is maintained at 4200 to provide front direction. As mentioned above, the STOP state is entered in between states when the system changes state. This is done to eliminate unwanted behaviors that may be caused by random/erroneous readings. The FORWARD state will continue to execute until the car is within the limits of the allowed criteria. Once the reading of the sensor goes outside the allowed value due to the detection of an obstacle by the north sensor, car immediately enters the STOP state to avoid collision. <br/>
+<br/>
+
+
+3.	<b>BACKWARD</b>:  This state relies on the south sensor and the car enters this state when the user gives the command ‘b’ through the Bluetooth serial terminal. The car turns the wheels in the backward motion and the duty cycle of the servo is maintained at 4200 to provide back direction. The BACKWARD state will continue to execute until the car is outside the limits of the defined criteria and enters the STOP state as soon as an obstacle is close enough to the south sensor.<br/>
+<br/>
+
+4.	<b>FORWARD LEFT</b>:  This is the state that the car enters when user gives the command ‘i’ through the Bluetooth serial terminal. The car turns the wheels in the forward motion and the duty cycle of the servo is maintained at 3000 to provide the left direction. The servo motor goes in left direction for 1.5seconds and changes the duty cycle back to 4200 and goes in forward direction. The time for which the duty cycle is maintained at 3000(left direction) was corroborated experimentally. This state relies on the west sensor and when the value detected by the sensor goes below 200 which is the threshold for the criteria, the car enters the STOP state. <br/>
+<br/>
+
+
+5.	<b>FORWARD RIGHT</b>:  The car enters this state when user gives the command ‘o’ through the Bluetooth serial terminal. The car turns the wheels in the forward motion and the duty cycle of the servo is maintained at 5500 to provide the right direction. The function of FORWARD RIGHT is very similar to that of FORWARD LEFT as mentioned above except for the change in direction. This sensor relies on the east sensor and forward sensor, and when the value detected by any of the sensor goes below 200 which is the defined criteria for all sensors, the car enters the STOP state.<br/>
+<br/>
+
+
+6.	<b>BACKWARD LEFT</b>:  The car enters this state when user gives the command ‘k’ through the Bluetooth serial terminal. The car turns the wheels in the backward direction and the duty cycle of the servo is maintained at 3000 for the left direction. Implementing the backward functions were very similar to that of forward functions as described above. The car steers to the left while moving backward for 1.5seconds and then continues in the backward direction until some obstacle is detected. In that case, the car enters the STOP state.<br/>
+<br/>
+
+7.	<b>BACKWARD RIGHT</b>: The car enters this state when the user gives the command ‘l’ through the Bluetooth serial terminal. The operation is similar to that of BACKWARD LEFT except for the direction. FLAG4 keeps track of the time since it entered this state and after 1.5seconds time duration, changes the duty cycle to 4200 and the car steers in the backward direction till any obstacle is detected. <br/>
+<br/>
+
+8.	<b>CIRCULAR LEFT</b>: The car enters this state when the user gives the command ‘q’ through the Bluetooth serial terminal. This state is used for making left U turns across a corner of the road. The servo rotates in the left direction as the duty cycle is set to 3000 and the DC Motor remains in the STOP state allowing the car to make a circular left.<br/>
+<br/>
+
+
+9.	<b>CIRCULAR RIGHT</b>: The car enters this state when the user gives the command ‘w’ through the Bluetooth serial terminal. This is similar to CIRCULAR LEFT as described above except for the change in direction.
+Using the above 9 commands, it is possible to maneuver the car in all the directions possible making the model more like an actual car. <br/>
+
+
+
+
+</p>
+
+
+
+
+
+									
+
+<div class="container">
+									<h3><b>Bluetooth and Serial Communication Setup</b></h3>
+
+<p>The Bluetooth module is interfaced with microcontroller to wirelessly transmit the commands from the user to the robot car. In this project one character commands are sent from the Bluetooth terminal application on the PC/Mobile to the HC-05 Bluetooth module mounted on the car using the serial communication interface. The command PT_SETUP() has been used to setup the serial communication and the required baud rate for the functioning of the Bluetooth.In the protothread that has been initialized to setup the Bluetooth module the characters are received and transmitted to the remote user using the following commands: <br/>
+	<br/>
+
+                                                <i> character = UARTGetDataByte(UART2)</i>; //Store Bluetooth command in a variable<br/>
+                                                <i>UARTSendDataByte(UART2, character)</i>; //Echo back the same command to serial terminal<br/>
+                                                <br/>
+                                               
+
+
+The bits RB0 and RB1 on the microcontroller which essentially control the direction of rotation of the DC motor are controlled based on the character sent by the user. The duty cycle of the servomotor that controls the direction of motion of the car is also set based on the character input by the user in this protothread.<br/>
+<br/>
+
+
+
+Example:<br/>
+   <i> if(character == 'i') //Turn left and Forward </i> <br/>
+        {
+            <i> flag1=0; </i> <br/>
+            <i> time1 = PT_GET_TIME(); </i> <br/>
+            <i> duty_cycle = 3000;</i> <br/>
+            <i> mPORTAClearBits(BIT_0);</i> <br/>
+            <i> mPORTASetBits(BIT_3);</i> <br/>
+ </p>
+
+<div class="container">
+									<h3><b>HC-SR04 Ultrasonic Sensor Setup</b></h3>
+
+<p>The first part of ultrasonic sensor involves generation of  a trigger signal from the microcontroller to initialize it. We have given the trigger signal through PWM wave that has very low frequency (10HZ) and a pulse width of 10 µs. An OpenCapture has been used for each of the four sensors to output a PWM trigger signal from the I/O ports of the microcontroller.<br/>
+													<br/>
+
+Example:<br/>
+
+
+    <i>OpenOC5(OC_ON | OC_TIMER3_SRC | OC_PWM_FAULT_PIN_DISABLE, 10, 10);</i> <br/>
+    <i>PPSOutput(3, RPA4, OC5);</i><br/>
+    <br/>
+
+The second part of the setup involves capturing the echo signal generated by the sensor when an obstacle is encountered. For this we have utilized four input captures for four sensors respectively and declared different sub priorities to achieve coordinated functionality. <br/>
+<br/>
+
+Example:<br/>
+
+    <i>OpenCapture3(IC_EVERY_FALL_EDGE | IC_INT_1CAPTURE |IC_TIMER3_SRC | IC_ON );</i><br/>
+    <i>ConfigIntCapture3(IC_INT_ON | IC_INT_PRIOR_2 | IC_INT_SUB_PRIOR_3);</i><br/>
+    <i>INTClearFlag(INT_IC3);</i><br/>
+    <i>PPSInput(2, IC3, RPB11);</i><br/>
+   <i> mPORTBSetPinsDigitalIn(BIT_11); port as input (BIT_11)</i><br/>
+
+ </p>
+
+ <div class="container">
+									<h3><b>Servo Motor Setup</b></h3>
+
+<p>A basic servo motor normally has three terminals: Ground, Vcc and PWM input signal. As described in the hardware section of the project the based on the duty cycle change given by the user the direction of the servomotor changes. In this project we have once again used an OpenCapture to generate the pulse width modulation pulse with a frequency of 50HZ. <br/>
+ <br/>
+Example <br/>
+<i>OpenTimer2(T2_ON | T2_SOURCE_INT | T2_PS_1_16, 50000); //</i> <br/> 40000000/(50000*16)=50Hz Frequency
+<i>OpenOC3(OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, duty_cycle, duty_cycle); </i><br/>
+<i>PPSOutput(4, RPB9, OC3);</i></br>
+<br/>
+
+The values of the duty cycles used for the six directions have been described in detail inside the Signaling Algorithm section.
+
+
+ </p>
+
+ <div class="container">
+									<h3><b>Serial Peripheral Interface Setup</b></h3>
+
+
+For this project we had to include a Serial Peripheral Interface Setup for setting the I/O pins of the microcontroller to opencapture pins and input capture pins. This is necessary for the interfacing of the sensors and the servomotor to the PIC32 microcontroller.<br/>
+<br/>
+
+
+    <i>PPSOutput(2, RPB5, SDO2);</i><br/>
+    <i>mPORTBSetPinsDigitalOut(BIT_4);</i><br/>
+    <i>mPORTBSetBits(BIT_4);</i><br/>
+    <i>divide Fpb by 2, configure the I/O ports.</i><br/>
+    <i>16 bit transfer CKP=1 CKE=1;</i><br/>
+    <i>Enable SPI at 20MHz clock;</i><br/>
+    <i>SpiChnOpen(spiChn, SPI_OPEN_ON | SPI_OPEN_MODE16 | SPI_OPEN_MSTEN |  ;  </i><br/> 
+    <i>SPI_OPEN_CKE_REV, spiClkDiv);</i><br/>
+
+ </p>
+
+
+
+
+						<!-- Four -->
+							<section id="five">
+								<div class="container">
+										<h3>Results</h3>
+                                    <h5>A. Accuracy</h5>
+                                    <p>The final configuration of the car is capable of accurately moving in any one of the six directions (forward, backward, forward-right, forward-left, backward-right, backward-left) with 100% accuracy by extensive training of the car through optimization of  the duty cycle. Essentially we have given a time offset of 1.5 seconds to align the servo motor in the neutral direction after turning into a particular direction. This way the turnings made by the car are precise relative to the direction it is intended to go .<br/>
+
+                                    The performance of the car to obstacle avoidance is good with an accuracy of 80%. The car stops when the sensor (that is if the car is going in the backward direction the forward sensor doesn't work) detects an obstacle with a range of 3.448cm despite the user giving the driving commands. However the system fails to perform in a few corner cases. When the car is supposed to make a turn alongside a boundary it detects the boundary as an obstacle and the stops. There were also instances when the hardware circuitry of the car caused a hindrance to the sensor causing false detection. This was rectified by rewiring and remounting of the hardware compactly on the chassis of the car.
+
+                             
+
+
+ </p>
+                                        <h5><b>B. Outputs of the Bluetooth:</b></h5>
+                                        <p> <img src="bluetooth_1.png" width="600pix" Height="400pix" alt="" /><i><br/>Figure 12 : Bluetooth Diagram </i> <br/>  1st is the waveform for character sent from the serial terminal to the bot <br/>
+
+
+                                        2nd is the echo from the bot to the serial terminal and this essentially the character that the user has sent.<br/>
+                                         We have used this as a form of debugging to confirm whether the character has been received by the microcontroller or not. Additionally we have also utilised the bluetooth terminal as a TFT display to debug the working of the sensors by displaying a character when an obstacle is encountered.  <br/><br/>
+
+
+
+                                        <img src="bluetooth_2.png" width="600pix" Height="400pix" alt="" /><i><br/>Figure 13 : Bluetooth Serial Terminal </i> <br/> The figure illustrates characters "f" and "b" being sent to the bluetooth module on the car for direction control<br/>
+                                    
+ </p>
+										<h5> C. Ultrasonic Sensors Output Waveforms: <br/></h5>
+										<p> <img src="ultrasonic_1.png" width="600pix" Height="400pix" alt="" /><i><br/>Figure 14 : Ultrasonic Output Waveform <br/>
+											When the obstacle is near the echo pulse becomes high for a duration that can be converted into distance using the formula mentioned below:
+											Distance (cm) = Time (Micro Seconds)/58<br/>
+
+										</i> <br/> <br/>
+											<img src="ultrasonic_2.png" width="600pix" Height="400pix" alt="" /><i><br/>Figure 15 : Ultrasonic Output Waveform <br/>
+											When the obstacle is far the echo pulse duration increases and once the proximity of the obstacle increases beyond the range of the sensor (~200cm) the sensor does not give back any echo pulse to the microcontroller.</i> <br/> <br/>
+											<img src="ultrasonic_3.png" width="600pix" Height="400pix" alt="" /><i><br/>Figure 16 : Ultrasonic Trigger and Echo Waveforms (as given by the module's datesheet) </i> <br/> <br/>
+</p>
+
+
+<h5> D. Car Control Output Video Clips: <br/></h5>
+<video width="600" height="400" controls>
+  <source src="video_1.mp4" type="video/mp4">
+  </video><br/>
+  	<p><i>Figure 17 : Video Illustrating DC Motor Control </i> <br/>
+  	This video illustrates the backward and forward rotation of the DC motor by giving "f" and "b" commands from the mobile bluetooth terminal application.<br/>
+  	<br/>
+  </p>
+  	
+<video width="600" height="400" controls>
+  	<source src="video_2.mp4" type="video/mp4">
+  		</video><br/>
+  	<p><i>Figure 18 : Video Illustrating Sensor Operation </i><br/>
+  		This video illustrates obstacle avoidance by the ultrasonic sensor. When the hand is moved close to the sensor the DC motor stops rotating<br/>
+  	<br/>
+  </p>
+
+
+
+
+
+
+										                  
+									
+									
+				
+						<section>
+							<div class="container">
+								<h3>Conclusions</h3>
+								<p> Through the ECE 4760 design project we were able to explore the domain of wireless communication modules like the Bluetooth, sensors etc. and their integration with the pic32 microcontroller. There exists an incredible amount of scope to expand upon this project. Some of future improvements we would like to make include designing of an autonomous parking mode and an intelligent path planning algorithm for the robot. Our design with the sensors can be improved through the utilization of their values to intelligently train the robot to perform specified tasks. Initially we also proposed to have an alternate energy source for the car. We planned to have a saline water based power source where the car runs on the voltage obtained through the electrolysis of salt water. Due to time constraints and infeasibility of the technique at this stage we had to stick to the 9v battery to power the car.</p>
+								
+								<h5>Intellectual Property Considerations</h5>
+								<p>We appreciate the work by Adam Dunkels in developing Protothreads for C and our Professor Bruce Land who provided us with an extended version. Protothreads were extensively used in our project. Lastly, we appreciate the example set by Shaan Shetty, Alberto Gutierrez and Boling Hu in their ECE 4760 Final Project in 2016; although their project was somewhat different than ours, they did provide us a clarity on the approach that we were thinking for our project. We also want to acknowledge Samir Durwasula, Justin Selig and Adarsh Jayakumar for the work done on the website for their final project report in 2015. Ideas were taken from their report to create this website. We have acknowledged all use of code and have abided by all copyright statements on both code and hardware. We have given credit to all hardware devices that were used in this project, as well as the code that was referenced in our final program.  </p>
+
+								<h5>Ethical Considerations</h5>
+								<p>In Accordance with the IEEE code of ethics, we considered our design choices carefully and we held ourselves to high ethical standards which included working to not only ensure our project met all quality technical standards, but also holding ourselves to a professional working standard. Our device was made by ensuring that nobody will be harmed during use.  Our project is absent of any potential unsafe factors which intentionally endanger the public or environment. We made no claims that the device can do something it cannot, nor is something that it is not. As we have open sourced our designs, we have minimized any potential conflicts of interest and false claims about the technology used. We hope that our documentation can help others better understand the technology behind microcontroller design, and we welcome any honest criticism and feedback readers may have upon us. By designing this obstacle avoidance car, we intend to make an autonomous accident free car on which most of the big companies like Tesla and BMW are working on. As such, we've strove to make as great an impact on this market as possible given the time constraints and available resources.</p>
+
+							    <h5>Legal Considerations</h5>
+                                <p>Our project includes a Bluetooth Module and Ultrasonic sensors. Our HC-05 Bluetooth module uses the Bluetooth specification v2.0+EDR protocol, operates on a 2.4GHz ISM band, and has an emission power of <=-84dBm. It also operates at 3.3V and includes authentication and encryption protocols for data transfer. Pulse transmissions for the Ultrasonic sensors HC-SR04 were brief and in the inaudible 40KHz frequency. Use of the car chassis and lab equipment was fully authorized, with prior permission from the lab staff. These components and respective specifications adhere to FCC standard restrictions and thus our design is capable of operating legally in the US.
+                                </p> 
+
+                                <h2> Acknowledgements </h2>
+                                <p>
+                                   We would like to give a special thanks to our professor Dr. Bruce Land for all the recommendations, support and guidance that he provided to us throughout our work on this project. Prof. Land was of immense help in getting this project completed. We would also like to thank him for building a great course from which we have gained enourmous amount of knowledge and hands on experience. Also, we would like to thank the TA’s especially Samir who was our lab TA, for the continuous support and guidance throughout the semester. 
+                                </p>
+                            </div>		
+						</section>
+
+						<section id="six">
+							<div class="container">
+								<h2>Appendix</h2>
+								<ul class="actions">
+
+									<p> The group approves this report for inclusion on the course website.<br/>
+										The group approves the video to be uploaded on the Youtube channel.</p>
+									<li><a href="code.html"><input type="submit" class="special" value="Commented Code"></a></li>
+                                    <li><a href="schematic.html"><input type="submit" class="special" value="Schematic"></a></li>
+                                    <li></li>
+								</ul>
+									</div>
+						</section>
+							
+
+							
+								
+										<h4>Parts List</h4>
+										<div class="table-wrapper">
+											<table class="alt">
+												<thead>
+													<tr>
+														<th>Name</th>
+														<th>Description</th>
+														<th>Link</th>
+														<th>Price</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>HC-05 Bluetooth Module</td>
+														<td>This module enables wireless communication between the user and the car.</td>
+														<td><p><a href="https://www.amazon.com/HC-05-Bluetooth-Pass-through-Wireless-Communication/dp/B01G9KSAF6/ref=sr_1_1_sspa?ie=UTF8&qid=1512289031&sr=8-1-spons&keywords=hc+05+bluetooth+module&psc=1">Bluetooth_purchase_link</a></p></td>
+														<td>$8.99</td>
+													</tr>
+													<tr>
+														<td>SG-90 Servo Motor </td>
+														<td>For Directional Control</td>
+														<td><p><a href="https://www.amazon.com/TowerPro-Helicopter-Airplane-Controls-IFANCY-TECH/dp/B01G95KPZ4/ref=sr_1_2_sspa?ie=UTF8&qid=1512279448&sr=8-2-spons&keywords=servo+motors&psc=1">Servomotor_purchase_link</a></p></td>
+														<td>$6.99</td>
+													</tr>
+													<tr>
+														<td>Robot Car Chassis Kit</td>
+														<td>Required for mounting all the hardware circuitry </td>
+														<td><p><a href="https://www.walmart.com/ip/2WD-Motor-Smart-Robot-Car-Chassis-Speed-Encoder-Battery-Box-Kit-for-Arduino/171150313?wmlspartner=wlpa&selectedSellerId=571&adid=22222222227090419585&wmlspartner=wmtlabs&wl0=&wl1=g&wl2=c&wl3=204586484049&wl4=pla-331252164882&wl5=9005779&wl6=&wl7=&wl8=&wl9=pla&wl10=111838760&wl11=online&wl12=171150313&wl13=&veh=sem">Robot_car_chassis_purchase_link</a></p></td>
+														<td>$22.51</td>
+													</tr>
+													<tr>
+														<td>L293DNE H-Bridge</td>
+														<td>Motor Driver for Bi directional control and for limiting the affect of overvoltages on the microcontroller</td>
+														<td><p><a href="https://www.adafruit.com/product/807">H-Bridge_purchase_link</a></p></td>
+
+														<td>$2.95 (x3)</td>
+													</tr>
+													<tr>
+														<td>Four HC-SR04 Ultrasonic Sensors</td>
+														<td>These sensors implement obstacle avoidance</td>
+														<td><p><a href="https://www.sparkfun.com/products/13959">Sensor_purchase_link</a></p></td>
+														<td> 3.75 (×4) </td>
+													</tr>
+													<tr>
+														<td>Duracell 9V B</td>
+														<td>For powering the robot car</td>
+														<td><p><a href="https://www.amazon.com/Duracell-Coppertop-Alkaline-Batteries-Count/dp/B0014D0SL8">Battery_purchase_link</a></p></td>
+														<td>$10 </td>
+													</tr>
+													<tr>
+														<td>4N35 Optoisolater</td>
+														<td>To protect the microcontroller from the DC motor voltage spikes</td>
+														<td><p><a href="https://www.digikey.com/product-detail/en/lite-on-inc/4N35/160-1304-5-ND/385766">4N35_purchase_link</a></p></td>
+														<td> $1 </td>
+													</tr>
+													<tr>
+														<td>Protoboard</td>
+														<td>Permanent mounting of circuit components.</td>
+														<td>N/A</td>
+														<td>$2.50 </td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<td colspan="3"></td>
+														<td>$70.74</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+							
+				
+					<section>
+						<div class="container">
+							<h3>References</h3>
+                            <h5>Datasheets</h5>
+							<ul>
+								<li>HC-05 Bluetooth Module: <a href="http://cxem.net/arduino/download/HC%20Serial%20Bluetooth%20Products%20201104.pdf"> Datasheet</a></li>
+								<li>Ultrasonic Sensor: <a href="https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf">Datasheet</a></li>
+                                
+                                <li>Servomotor<a href="http://akizukidenshi.com/download/ds/towerpro/SG90.pdf">Datasheet</a></li>
+                                <li>Motor Driver<a href="https://cdn-shop.adafruit.com/datasheets/l293d.pdf">Datasheet</a></li>
+                                <li>4N35 Optoisolater<a href="http://optoelectronics.liteon.com/upload/download/DS-70-99-0012/4N3X%20Series%201115.pdf">Datasheet</a></li>
+                                <li>Pic32: <a  href="http://ww1.microchip.com/downloads/en/DeviceDoc/60001168H.pdf">Datasheet</a></li>
+							</ul>
+                            <h5>Referenced Projects </h5>
+                            <ul>
+                                <li> ECE-4760 2016 Final Project <a href="http://people.ece.cornell.edu/land/courses/ece4760/FinalProjects/f2016/amg432_srs383_bh475/amg432_srs383_bh475/amg432_srs383_bh475/index.htm">:Autonomous Parallel Parking Project</a></li>
+                                
+                            </ul>
+                            <h5>Background Sites</h5>
+                            <ul>
+                                <li>ECE 4760 Course Website <a href="http://people.ece.cornell.edu/land/courses/ece4760/"> ECE 4760 </a></li>
+                                <li>ECE 4760 Course Website <a href="http://people.ece.cornell.edu/land/"> Prof Bruce Land </a></li>
+                                <li>ECE 4760 Course Website <a href="http://people.ece.cornell.edu/land/courses/ece4760/PIC32/index_Protothreads.html"> Protothreads </a></li>
+                                <li>ECE 4760 Course Website <a href="https://www.ece.cornell.edu/"> Prof Bruce Land </a></li>
+
+                                 
+                            </ul>
+<h5>Background Info</h5>
+                            <ul>
+                                <li>ECE 4760 Course Website <a href="https://www.ieee.org/about/corporate/governance/p7-8.html"> IEEE Code of Ethics </a></li>
+                                 
+                            </ul>
+
+
+
+
+
+                            
+                          
+                            <section>
+						<div class="container">
+							<h3>Work Distribution</h3>
+                            <ul>
+                                <li>Abhimanyu: Designed the Robot Car Chassis and worked on integrating all the hardware circuitry. Also built the DC motor circuitry and got the servomotor working essentially in all the six directions. Contributed to the Website Submission </li>
+                                <li>Dev: Worked on the directional control algorithm and the setup and integration of the ultrasonic sensors. Contributed to the Website Submission</li>
+                                <li>Anwitha: Worked on the Bluetooth setup and enabling of directional control from the terminal application. Also contributed towards the collision avoidance sensor algorithm. Worked on the project Website  </li>
+                            </ul>
+						</div>
+					</section>
+
+				<!-- Footer -->
+					<section id="footer">
+						<div class="container">
+							<ul class="copyright">
+								<li>&copy; 2017 Abhimanyu Khandelwal, Anwitha Paruchuri and Dev Sanghvi<br/>
+								           Style and layout adapted from Justin Selig <br/>
+								           </li>
+							</ul>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollzer.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
